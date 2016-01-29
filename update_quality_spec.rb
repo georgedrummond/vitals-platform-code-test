@@ -1,6 +1,30 @@
 require 'rspec'
 require 'update_quality'
 
+describe ConstructedAwardClass do
+  describe '.to_class_name' do
+    context 'simple string' do
+      subject { described_class.new('simple') }
+      it { expect(subject.to_class_name).to eq 'Awards::Simple' }
+    end
+
+    context 'string with spaces' do
+      subject { described_class.new('spaced string') }
+      it { expect(subject.to_class_name).to eq 'Awards::SpacedString' }
+    end
+
+    context 'string with weird capitalization' do
+      subject { described_class.new('wEird CapItalization') }
+      it { expect(subject.to_class_name).to eq 'Awards::WeirdCapitalization' }
+    end
+
+    context 'uppercase string' do
+      subject { described_class.new('UPPER CASE') }
+      it { expect(subject.to_class_name).to eq 'Awards::UpperCase' }
+    end
+  end
+end
+
 describe '#update_quality' do
 
   context 'Given a single award' do
@@ -122,6 +146,7 @@ describe '#update_quality' do
 
           context 'at max quality' do
             let(:initial_quality) { 50 }
+            specify { expect(award.quality).to eq(initial_quality) }
           end
         end
 
@@ -177,7 +202,6 @@ describe '#update_quality' do
       end
 
       context 'given a Blue Star award' do
-        before { pending }
         let(:name) { 'Blue Star' }
         before { award.expires_in.should == initial_expires_in-1 }
 
